@@ -1,19 +1,31 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:talla_pdf/util/file_util.dart';
 
-class SendDocument extends StatelessWidget {
+class SendDocument extends StatefulWidget {
+
   const SendDocument({super.key});
 
   @override
+  State<SendDocument> createState() => _SendDocumentState();
+}
+
+class _SendDocumentState extends State<SendDocument> {
+
+  final FileUtil fileUtil = FileUtil();
+  bool isFilePicked  = false;
+
+  @override
   Widget build(BuildContext context) {
-    final buttonSize = Size(200, 60); // حجم الزرين
+    const buttonSize = Size(200, 60);
+
 
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Color(0xFF103357),
+        backgroundColor: const Color(0xFF103357),
         title: const Text(
-          ' قائمة المستندات',
-          style: TextStyle(fontSize: 24), // حجم النص
+          '',
+          style: TextStyle(fontSize: 24),
         ),
         centerTitle: true,
       ),
@@ -23,7 +35,7 @@ class SendDocument extends StatelessWidget {
           Align(
             alignment: Alignment.topCenter,
             child: Image.asset(
-              'assets/images/pic1.png',
+              'assets/images/ministrylogo.png',
               width: 150,
               height: 150,
             ),
@@ -34,43 +46,37 @@ class SendDocument extends StatelessWidget {
             height: buttonSize.height,
             child: ElevatedButton(
               style: ElevatedButton.styleFrom(
-                primary: Color(0xFF103357), // لون الزر
-                onPrimary: Color.fromARGB(255, 250, 219, 151), // لون النص على الزر
-                textStyle: TextStyle(fontSize: 18), // حجم النص على الزر
+                foregroundColor: const Color.fromARGB(255, 250, 219, 151), backgroundColor: const Color(0xFF103357),
+                textStyle: const TextStyle(fontSize: 18),
               ),
               onPressed: () {
-                Navigator.of(context).push(
-                  MaterialPageRoute(
-                      builder: (context) =>
-                      //TODO() implement the functionality to open the form.
-                    const Placeholder()
-                  ),
-                );
+                fileUtil.pickedFile().then((pickedFile) {
+
+                  if (pickedFile != null) {
+                    print( "file path result : $pickedFile");
+                    setState(() {
+                      isFilePicked = true;
+                    });
+
+                    //TODO() to pass the filepath of the pdf and retrieve it in the next destination.
+
+                  } else {
+                    //TODO() Add appropriate error handling.
+                  }
+                });
               },
-              child: Text('ملف جديد'),
+              child: const Text('pick a file'),
             ),
           ),
-          SizedBox(height: 20),
-          SizedBox(
-            width: buttonSize.width,
-            height: buttonSize.height,
-            child: ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                primary: Color(0xFF103357), // لون الزر
-                onPrimary: Color.fromARGB(255, 250, 219, 151),// لون النص على الزر
-                textStyle: TextStyle(fontSize: 18), // حجم النص على الزر
-              ),
-              onPressed: () { Navigator.of(context).push(
-                MaterialPageRoute(
-                    builder: (context) =>
-                    //TODO() implement the functionality to view the document.
-                      const Placeholder()
-                ),
-              );
-              },
-              child: const Text('الملفات'),
+          const SizedBox(height: 20),
+          if (isFilePicked)
+            const Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(Icons.file_copy),
+                Text('Picked File.'),
+              ],
             ),
-          ),
         ],
       ),
     );

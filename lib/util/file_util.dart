@@ -9,7 +9,6 @@ import 'package:file_picker/file_picker.dart';
 class FileUtil {
   Future<File?> pickedFile() async {
     FilePickerResult? result = await FilePicker.platform.pickFiles(type: FileType.custom, allowedExtensions: ['pdf']);
-
     if(result != null) {
       return File(result.files.single.path!);
     } else {

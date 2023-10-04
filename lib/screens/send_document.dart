@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:talla_pdf/screens/file_viewer.dart';
 import 'package:talla_pdf/util/file_util.dart';
 
 class SendDocument extends StatefulWidget {
@@ -50,16 +51,20 @@ class _SendDocumentState extends State<SendDocument> {
                 textStyle: const TextStyle(fontSize: 18),
               ),
               onPressed: () {
+
                 fileUtil.pickedFile().then((pickedFile) {
 
                   if (pickedFile != null) {
-                    print( "file path result : $pickedFile");
                     setState(() {
                       isFilePicked = true;
                     });
 
-                    //TODO() to pass the filepath of the pdf and retrieve it in the next destination.
-
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => FileViewerScreen(filePath: pickedFile.path),
+                      ),
+                    );
                   } else {
                     //TODO() Add appropriate error handling.
                   }
